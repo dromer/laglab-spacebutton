@@ -58,12 +58,12 @@ void loop() {
         if(old_state != state){
           if(state == 0){
               http2.begin("state.lag", 80, "/?spacebutton=closespace");
-              http.GET();
+              http2.GET();
               USE_SERIAL.print("New button state and closing\n");
             }
           else if(state == 1){
               http2.begin("state.lag", 80, "/?spacebutton=openspace");
-              http.GET();
+              http2.GET();
               USE_SERIAL.print("New button state and opening\n");
             }
         } else{
