@@ -56,12 +56,12 @@ void loop() {
         HTTPClient http2;
 
         if(old_state != state){
-          if(state == 0){
+          if(state == 1){
               http2.begin("state.lag", 80, "/?spacebutton=closespace");
               http2.GET();
               USE_SERIAL.print("New button state and closing\n");
             }
-          else if(state == 1){
+          else if(state == 0){
               http2.begin("state.lag", 80, "/?spacebutton=openspace");
               http2.GET();
               USE_SERIAL.print("New button state and opening\n");
