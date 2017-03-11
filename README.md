@@ -6,4 +6,4 @@ Connects to http://state.lag to 'press the button' and change the state. Then re
 
 
 # todo:
-Update code with relay switcheroo.
+* make it better

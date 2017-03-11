@@ -8,39 +8,32 @@
 #include <Arduino.h>
 
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
-
 #include <ESP8266HTTPClient.h>
 
 #define USE_SERIAL Serial
 
-//ESP8266WiFiMulti WiFiMulti;
-
 const int ledr = 14;
 const int ledg = 13;
 const int ledb = 12;
-
 const int button = 5;
+const int relay = 16;
+
 int state;
 int old_state = 0;
 
+// give me your wifi bro
+const char *ssid = "LAG";
+const char *password = "somethingeasytoremember";
+
 void setup() {
 
-   USE_SERIAL.begin(115200);
-  // USE_SERIAL.setDebugOutput(true);
+    USE_SERIAL.begin(115200);
+    Serial.println();
+    Serial.print("connecting to ");
+    Serial.println(ssid);
+    WiFi.begin(ssid, password);
 
-   USE_SERIAL.println();
-   USE_SERIAL.println();
-   USE_SERIAL.println();
-
-   for(uint8_t t = 4; t > 0; t--) {
-       USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);
-       USE_SERIAL.flush();
-       delay(1000);
-   }
-
-    WiFi.begin("LAG", "somethingeasytoremember");
-       // really disable spamming wifi ;(
+   // really disable spamming wifi ;(
     WiFi.mode(WIFI_STA);
     WiFi.softAPdisconnect(true);
 
@@ -49,10 +42,12 @@ void setup() {
         Serial.print(".");
     }
 
+    // setup pins
     pinMode(ledr, OUTPUT);
     pinMode(ledg, OUTPUT);
     pinMode(ledb, OUTPUT);
     pinMode(button, INPUT_PULLUP);
+    pinMode(relay, OUTPUT);
 
 }
 
@@ -97,11 +92,13 @@ void loop() {
              analogWrite(ledr, 255);
              analogWrite(ledg, 0);
              analogWrite(ledb, 0);
+             digitalWrite(relay, LOW);
              }
            else if(payload == "open"){
              analogWrite(ledr, 0);
              analogWrite(ledg, 255);
              analogWrite(ledb, 100);
+             digitalWrite(relay, HIGH);
              }
        }
    } else {
