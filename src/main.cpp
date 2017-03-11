@@ -111,5 +111,7 @@ void loop() {
         } else {
            Serial.println("[HTTP] GET... failed, no connection or no HTTP server");
         }
+        checkmillis = millis();
     }
+
 }
