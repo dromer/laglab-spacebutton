@@ -10,8 +10,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-#define USE_SERIAL Serial
-
 // pins
 const int ledr = 14;
 const int ledg = 13;
@@ -32,7 +30,7 @@ int checkmillis = millis();
 
 void setup() {
 
-    USE_SERIAL.begin(115200);
+    Serial.begin(115200);
     Serial.println();
     Serial.print("connecting to ");
     Serial.println(ssid);
@@ -66,15 +64,15 @@ void loop() {
          if(state == 1){
              http_state.begin("state.lag", 80, "/?spacebutton=closespace");
              http_state.GET();
-             USE_SERIAL.print("New button state and closing\n");
+             Serial.println("New button state and closing");
            }
          else if(state == 0){
              http_state.begin("state.lag", 80, "/?spacebutton=openspace");
              http_state.GET();
-             USE_SERIAL.print("New button state and opening\n");
+             Serial.println("New button state and opening");
            }
         } else{
-           USE_SERIAL.print("Nothing changed\n");
+           Serial.println("Nothing changed");
         }
 
         old_state = state;
@@ -82,21 +80,21 @@ void loop() {
         // read back the state set on the page
         HTTPClient http_read;
 
-        USE_SERIAL.print("[HTTP] begin...\n");
-        // configure traged server and url
+        Serial.println("[HTTP] begin...");
         http_read.begin("state.laglab.org", 80, "/botstate"); //HTTP
+        http_read.setUserAgent("NCSA_Mosaic/2.0 (Windows 3.1)");
 
-        USE_SERIAL.print("[HTTP] GET...\n");
+        Serial.println("[HTTP] GET...");
         // start connection and send HTTP header
         int httpCode = http_read.GET();
         if(httpCode) {
            // HTTP header has been send and Server response header has been handled
-           USE_SERIAL.printf("[HTTP] GET... code: %d\n", httpCode);
+           Serial.printf("[HTTP] GET... code: %d\n", httpCode);
 
            // file found at server
            if(httpCode == 200) {
                String payload = http_read.getString();
-               USE_SERIAL.println(payload);
+               Serial.println(payload);
                if(payload == "closed"){
                  analogWrite(ledr, 255);
                  analogWrite(ledg, 0);
@@ -111,7 +109,7 @@ void loop() {
                  }
            }
         } else {
-           USE_SERIAL.print("[HTTP] GET... failed, no connection or no HTTP server\n");
+           Serial.println("[HTTP] GET... failed, no connection or no HTTP server");
         }
     }
 }
